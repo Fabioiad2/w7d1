@@ -1,8 +1,13 @@
 // Mini-libreria — Settimana VII Giorno I
 const lista = document.querySelector('#lista-libri')
 
-const formato = document.querySelector('#formato').value
+const formato = document.querySelector('#formato')
 const form = document.querySelector('#form')
+const boxDigitale  = document.querySelector('#boxDigitale')
+const dimensione = document.querySelector('#dimensione')
+ const titolo = document.querySelector('#titolo')
+const autore = document.querySelector('#autore')
+const anno = document.querySelector('#anno')
 //
 let libri = []
 // Devi fare 4 cose:
@@ -47,42 +52,48 @@ function render(list){
         pirmo.classList.add('col-md-6','col-12')
         const secondo = document.createElement('div')
         secondo.classList.add('col-md-6','col-12')
-        const titolo = document.createElement('h4')
+        const titoloLibro = document.createElement('h4')
         const autore = document.createElement('h4')
         const anno = document.createElement('h4')
         const letto = document.createElement('h4')
         const btn = document.createElement('button')
         btn.textContent = 'segna come letto'
         btn.classList.add('btn','btn-dark')
-        titolo.textContent = l.titolo
+        titoloLibro.textContent = l.titolo
         autore.textContent = l.autore
         anno.textContent = l.anno
         letto.textContent = l.letto
         lista.appendChild(div1)
         div1.appendChild(pirmo)
-        pirmo.appendChild(titolo)
+        pirmo.appendChild(titoloLibro)
         pirmo.appendChild(anno)
+        pirmo.appendChild(autore)
         div1.appendChild(secondo)
         secondo.appendChild(btn)
     })
 }
 
-
+let newLibro;
 
 // === Eventi ===
+formato.addEventListener('change', () => {
+  boxDigitale.classList.toggle('d-none', formato.value !== 'digitale')
+})
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault()
-    const titolo = document.querySelector('#titolo').value
-    const autore = document.querySelector('#autore').value
-    const anno = document.querySelector('#anno').value
-    const newLibro = new Libro(titolo, autore, anno)
-    console.log(newLibro)
-    libri = [...libri, newLibro]
-    console.log(libri,'list')
-    render([...libri, newLibro])
+  e.preventDefault()
 
+  if (formato.value === 'digitale') {
+    newLibro = new LibroDigitale(titolo.value, autore.value, anno.value, false, formato.value, dimensione.value)
+  } else {
+    newLibro = new Libro(titolo.value, autore.value, anno.value, false)
+  }
+
+  libri = [...libri, newLibro]
+  render(libri)
 })
+
+
 
 const newdigial = new LibroDigitale('uno','due','tre')
 console.log(newdigial)
