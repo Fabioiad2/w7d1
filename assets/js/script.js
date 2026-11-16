@@ -3,9 +3,9 @@ const lista = document.querySelector('#lista-libri')
 
 const formato = document.querySelector('#formato')
 const form = document.querySelector('#form')
-const boxDigitale  = document.querySelector('#boxDigitale')
+const boxDigitale = document.querySelector('#boxDigitale')
 const dimensione = document.querySelector('#dimensione')
- const titolo = document.querySelector('#titolo')
+const titolo = document.querySelector('#titolo')
 const autore = document.querySelector('#autore')
 const anno = document.querySelector('#anno')
 //
@@ -20,8 +20,8 @@ class Libro {
         this.letto = _letto
     }
 }
-class LibroDigitale extends Libro{
-    constructor(_titolo, _autore, _anno, _letto,_formato,_dimensioneMb){
+class LibroDigitale extends Libro {
+    constructor(_titolo, _autore, _anno, _letto, _formato, _dimensioneMb) {
         super(_titolo, _autore, _anno, _letto)
         this.formato = _formato
         this.dimensioneMb = _dimensioneMb
@@ -43,22 +43,22 @@ class LibroDigitale extends Libro{
 
 
 // === Render ===
-function render(list){
+function render(list) {
     lista.textContent = ''
-    list.forEach(l=>{
+    list.forEach(l => {
         const div1 = document.createElement('div')
-        div1.classList.add('col-12','d-flex','card','flex-row')
+        div1.classList.add('col-12', 'd-flex', 'card', 'flex-row')
         const pirmo = document.createElement('div')
-        pirmo.classList.add('col-md-6','col-12')
+        pirmo.classList.add('col-md-6', 'col-12')
         const secondo = document.createElement('div')
-        secondo.classList.add('col-md-6','col-12')
+        secondo.classList.add('col-md-6', 'col-12')
         const titoloLibro = document.createElement('h4')
         const autore = document.createElement('h4')
         const anno = document.createElement('h4')
         const letto = document.createElement('h4')
         const btn = document.createElement('button')
         btn.textContent = 'segna come letto'
-        btn.classList.add('btn','btn-dark')
+        btn.classList.add('btn', 'btn-dark')
         titoloLibro.textContent = l.titolo
         autore.textContent = l.autore
         anno.textContent = l.anno
@@ -77,23 +77,28 @@ let newLibro;
 
 // === Eventi ===
 formato.addEventListener('change', () => {
-  boxDigitale.classList.toggle('d-none', formato.value !== 'digitale')
+    boxDigitale.classList.toggle('d-none', formato.value !== 'digitale')
 })
 
 form.addEventListener('submit', (e) => {
-  e.preventDefault()
+    e.preventDefault()
 
-  if (formato.value === 'digitale') {
-    newLibro = new LibroDigitale(titolo.value, autore.value, anno.value, false, formato.value, dimensione.value)
-  } else {
-    newLibro = new Libro(titolo.value, autore.value, anno.value, false)
-  }
+    if (titolo.value !== '') {
+        console.log('ciao')
+        if (formato.value === 'digitale') {
+            newLibro = new LibroDigitale(titolo.value, autore.value, anno.value, false, formato.value, dimensione.value)
+        } else {
+            newLibro = new Libro(titolo.value, autore.value, anno.value, false)
 
-  libri = [...libri, newLibro]
-  render(libri)
+        }
+        libri = [...libri, newLibro]
+        form.reset()
+        render(libri)
+    }
 })
 
 
 
-const newdigial = new LibroDigitale('uno','due','tre')
-console.log(newdigial)
+
+const newdigial = new LibroDigitale('uno', 'due', 'tre')
+console.log(newdigial) 
