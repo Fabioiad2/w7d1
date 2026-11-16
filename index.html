@@ -1,22 +1,40 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mini-libreria — Settimana VII Giorno I</title>
-    <link rel="stylesheet" href="style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
   </head>
   <body>
-
     <header class="site-header">
       <h1>La mia libreria</h1>
       <p>Aggiungi i tuoi libri e segnali come letti.</p>
     </header>
 
     <main class="container">
-
       <section class="form-section">
         <!-- form per aggiungere un libro: titolo, autore, anno, formato (cartaceo/digitale) -->
+        <div class="row">
+          <div class="card p-4 col-12">
+            <h4 class="fw-bold">Aggiungi un libro</h4>
+            <div class="mb-3">
+              <label for="titolo" class="form-label">Titolo</label>
+              <input
+                type="email"
+                class="form-control"
+                id="titolo"
+                name="titolo"
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="lista-section">
@@ -25,9 +43,8 @@
           <!-- popolato da JavaScript -->
         </ul>
       </section>
-
     </main>
 
-    <script src="script.js"></script>
+    <script src="assets/js/script.js"></script>
   </body>
 </html>
