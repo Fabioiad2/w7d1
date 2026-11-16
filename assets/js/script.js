@@ -15,6 +15,13 @@ class Libro {
         this.letto = _letto
     }
 }
+class LibroDigitale extends Libro{
+    constructor(_titolo, _autore, _anno, _letto,_formato,_dimensioneMb){
+        super(_titolo, _autore, _anno, _letto)
+        this.formato = _formato
+        this.dimensioneMb = _dimensioneMb
+    }
+}
 // 2. Definire una classe LibroDigitale che estende Libro (aggiunge formato, dimensioneMb)
 // 3. Aggiungere un listener al form che crea una nuova istanza e la aggiunge all'array
 // 4. Renderizzare la lista nel <ul id="lista-libri"> via innerHTML
@@ -32,9 +39,10 @@ class Libro {
 
 // === Render ===
 function render(list){
+    lista.textContent = ''
     list.forEach(l=>{
         const div1 = document.createElement('div')
-        div1.classList.add('col-12')
+        div1.classList.add('col-12','d-flex','card','flex-row')
         const pirmo = document.createElement('div')
         pirmo.classList.add('col-md-6','col-12')
         const secondo = document.createElement('div')
@@ -75,3 +83,6 @@ form.addEventListener('submit', (e) => {
     render([...libri, newLibro])
 
 })
+
+const newdigial = new LibroDigitale('uno','due','tre')
+console.log(newdigial)
