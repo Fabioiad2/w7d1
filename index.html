@@ -1,85 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini-libreria — Settimana VII Giorno I</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
+
     <header class="site-header">
       <h1>La mia libreria</h1>
       <p>Aggiungi i tuoi libri e segnali come letti.</p>
     </header>
 
     <main class="container">
+
       <section class="form-section">
-        <!-- form per aggiungere un libro: titolo, autore, anno, formato (cartaceo/digitale) -->
-        <div class="row">
-          <div class="card p-4 col-12">
-            <h4 class="fw-bold">Aggiungi un libro</h4>
-            <form id="form" >
-              <div class="mb-3">
-                <label for="titolo" class="form-label">Titolo</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="titolo"
-                  name="titolo"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="autore" class="form-label">Autore</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="autore"
-                  name="autore"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="anno" class="form-label">Anno</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="anno"
-                  name="anno"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="formato" class="form-label">Anno</label>
-                <select class="form-control" name="formato" id="formato">
-                    <option value="cartaceo">Cartaceo</option>
-                    <option value="digitale">Digitale</option>
-                </select>
-              </div>
-               <div id="boxDigitale"  class="mb-3 d-none">
-                <label for="Dimensione" class="form-label">Dimensione mb</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="dimensione"
-                  name="dimensione"
-                />
-               </div>
-              <button class="btn btn-primary w-25">Aggiungi</button>
-            </form>
+        <h2>Aggiungi un libro</h2>
+        <form id="aggiungi-libro" class="form">
+
+          <div class="campo">
+            <label for="titolo">Titolo</label>
+            <input type="text" id="titolo" name="titolo" required>
           </div>
-        </div>
+
+          <div class="campo">
+            <label for="autore">Autore</label>
+            <input type="text" id="autore" name="autore" required>
+          </div>
+
+          <div class="campo">
+            <label for="anno">Anno</label>
+            <input type="number" id="anno" name="anno" required>
+          </div>
+
+          <div class="campo">
+            <label for="formato">Formato</label>
+            <select id="formato" name="formato">
+              <option value="cartaceo">Cartaceo</option>
+              <option value="digitale">Digitale</option>
+            </select>
+          </div>
+
+          <div class="campo campo-condizionale" id="campo-dimensione" hidden>
+            <label for="dimensione">Dimensione (MB)</label>
+            <input type="number" id="dimensione" name="dimensione" step="0.1">
+          </div>
+
+          <button type="submit" class="btn-primary">Aggiungi</button>
+        </form>
       </section>
 
       <section class="lista-section">
-        <h2>I tuoi libri</h2>
-        <div class="row" id="lista-libri">
+        <h2>I tuoi libri (<span id="contatore">0</span>)</h2>
+        <ul id="lista-libri" class="lista-libri">
           <!-- popolato da JavaScript -->
-        </div>
+        </ul>
       </section>
+
     </main>
 
     <script src="assets/js/script.js"></script>

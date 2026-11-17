@@ -1,104 +1,148 @@
-// Mini-libreria — Settimana VII Giorno I
-const lista = document.querySelector('#lista-libri')
-
-const formato = document.querySelector('#formato')
-const form = document.querySelector('#form')
-const boxDigitale = document.querySelector('#boxDigitale')
-const dimensione = document.querySelector('#dimensione')
-const titolo = document.querySelector('#titolo')
-const autore = document.querySelector('#autore')
-const anno = document.querySelector('#anno')
-//
-let libri = []
-// Devi fare 4 cose:
-// 1. Definire una classe Libro (titolo, autore, anno, letto)
-class Libro {
-    constructor(_titolo, _autore, _anno, _letto) {
-        this.titolo = _titolo;
-        this.autore = _autore;
-        this.anno = _anno;
-        this.letto = _letto
-    }
-}
-class LibroDigitale extends Libro {
-    constructor(_titolo, _autore, _anno, _letto, _formato, _dimensioneMb) {
-        super(_titolo, _autore, _anno, _letto)
-        this.formato = _formato
-        this.dimensioneMb = _dimensioneMb
-    }
-}
-// 2. Definire una classe LibroDigitale che estende Libro (aggiunge formato, dimensioneMb)
-// 3. Aggiungere un listener al form che crea una nuova istanza e la aggiunge all'array
-// 4. Renderizzare la lista nel <ul id="lista-libri"> via innerHTML
-//
-// Bonus: bottone "Segna come letto" su ogni elemento, gestito con event delegation.
-
+// Mini-libreria — Settimana VII Giorno I — Versione completa
+// class, campi, extends, override, static + form che crea istanze.
 
 // === Classi ===
 
+class Libro {
+    letto = false; // campo pubblico con valore di default (ES2022)
 
+    constructor(titolo, autore, anno) {
+        // id univoco anche dopo un reload (servirà domani con localStorage).
+        // crypto.randomUUID() richiede HTTPS o localhost: apri la pagina con Live Server.
+        this.id = crypto.randomUUID();
+        this.titolo = titolo;
+        this.autore = autore;
+        this.anno = anno;
+    }
 
-// === Stato (array di libri) ===
+    segnaComeLetto() {
+        this.letto = true;
+    }
 
+    formato() {
+        return 'cartaceo';
+    }
 
-
-// === Render ===
-function render(list) {
-    lista.textContent = ''
-    list.forEach(l => {
-        const div1 = document.createElement('div')
-        div1.classList.add('col-12', 'd-flex', 'card', 'flex-row')
-        const pirmo = document.createElement('div')
-        pirmo.classList.add('col-md-6', 'col-12')
-        const secondo = document.createElement('div')
-        secondo.classList.add('col-md-6', 'col-12')
-        const titoloLibro = document.createElement('h4')
-        const autore = document.createElement('h4')
-        const anno = document.createElement('h4')
-        const letto = document.createElement('h4')
-        const btn = document.createElement('button')
-        btn.textContent = 'segna come letto'
-        btn.classList.add('btn', 'btn-dark')
-        titoloLibro.textContent = l.titolo
-        autore.textContent = l.autore
-        anno.textContent = l.anno
-        letto.textContent = l.letto
-        lista.appendChild(div1)
-        div1.appendChild(pirmo)
-        pirmo.appendChild(titoloLibro)
-        pirmo.appendChild(anno)
-        pirmo.appendChild(autore)
-        div1.appendChild(secondo)
-        secondo.appendChild(btn)
-    })
+    // Factory: crea un Libro da una stringa "titolo|autore|anno" (EXTRA, passo 17)
+    static daStringa(s) {
+        const [titolo, autore, anno] = s.split('|');
+        return new Libro(titolo, autore, Number(anno));
+    }
 }
 
-let newLibro;
+class LibroDigitale extends Libro {
+    constructor(titolo, autore, anno, dimensioneMb) {
+        super(titolo, autore, anno); // prima di usare this
+        this.dimensioneMb = dimensioneMb;
+    }
+
+    // Override: stesso nome del metodo del parent, vince questo
+    formato() {
+        return `digitale (${this.dimensioneMb} MB)`;
+    }
+}
+
+// === Stato ===
+let libri = caricaLibri(); // let: l'EXTRA "Rimuovi" riassegna l'array con filter
+
+function caricaLibri() {
+    const datiSalvati = localStorage.getItem('libri');
+    if (!datiSalvati) {
+        return [];
+    }
+    return JSON.parse(datiSalvati);
+}
+renderLibri();
+
+// === Render ===
+
+// Crea un elemento con una classe e un testo (textContent: niente HTML interpretato)
+function crea(tag, classe, testo) {
+    const el = document.createElement(tag);
+    if (classe) { el.className = classe; }
+    if (testo !== undefined) { el.textContent = testo; }
+    return el;
+};
+
+function creaBottone(azione, testo) {
+    const b = crea('button', '', testo);
+    b.type = 'button';
+    b.dataset.azione = azione;
+    return b;
+}
+
+function renderLibri() {
+    const righe = libri.map((l) => {
+        const li = crea('li', l.letto ? 'letto' : '');
+        li.dataset.id = l.id; // serve all'event delegation per ritrovare il libro
+
+        const info = crea('div', 'info');
+        info.append(
+            crea('span', 'titolo', l.titolo),
+            l.formato && crea('span', 'badge-formato', l.formato()),
+            crea('div', 'meta', `${l.autore} — ${l.anno}`),
+        );
+
+        const azioni = crea('div', 'azioni');
+        azioni.append(
+            l.letto ? crea('span', '', '✓ letto') : creaBottone('leggi', 'Segna come letto'),
+            creaBottone('rimuovi', 'Rimuovi'),
+        );
+
+        li.append(info, azioni);
+        return li;
+    });
+
+    const lista = document.getElementById('lista-libri');
+    if (righe.length === 0) {
+        lista.replaceChildren(crea('li', 'vuota', 'Nessun libro in catalogo.'));
+    } else {
+        lista.replaceChildren(...righe);
+    }
+    document.getElementById('contatore').textContent = libri.length;
+}
 
 // === Eventi ===
-formato.addEventListener('change', () => {
-    boxDigitale.classList.toggle('d-none', formato.value !== 'digitale')
-})
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault()
+// Mostra/nasconde il campo "dimensione" in base al formato selezionato
+document.getElementById('formato').addEventListener('change', (e) => {
+    document.getElementById('campo-dimensione').hidden = e.target.value !== 'digitale';
+});
 
-    if (titolo.value !== '') {
-        console.log('ciao')
-        if (formato.value === 'digitale') {
-            newLibro = new LibroDigitale(titolo.value, autore.value, anno.value, false, formato.value, dimensione.value)
-        } else {
-            newLibro = new Libro(titolo.value, autore.value, anno.value, false)
+// Submit del form: legge tutti i campi con FormData e crea l'istanza giusta
+document.getElementById('aggiungi-libro').addEventListener('submit', (e) => {
+    e.preventDefault();
 
-        }
-        libri = [...libri, newLibro]
-        form.reset()
-        render(libri)
+    const { titolo, autore, anno, formato, dimensione } =
+        Object.fromEntries(new FormData(e.target));
+
+    const nuovo = formato === 'digitale'
+        ? new LibroDigitale(titolo, autore, Number(anno), Number(dimensione) || 0)
+        : new Libro(titolo, autore, Number(anno));
+
+    libri.push(nuovo);
+    localStorage.setItem('libri',JSON.stringify(libri));
+    renderLibri();
+    e.target.reset();
+    document.getElementById('campo-dimensione').hidden = true;
+});
+
+// Event delegation: un solo listener per tutti i bottoni della lista
+document.getElementById('lista-libri').addEventListener('click', (e) => {
+    const bottone = e.target.closest('[data-azione]');
+    if (!bottone) { return; }
+
+    const id = bottone.closest('li').dataset.id; // stringa (UUID): niente parseInt
+
+    if (bottone.dataset.azione === 'leggi') {
+        libri.find((l) => l.id === id)?.segnaComeLetto();
+    } else if (bottone.dataset.azione === 'rimuovi') {
+        libri = libri.filter((l) => l.id !== id);
     }
-})
 
+    renderLibri();
+});
 
-
-
-const newdigial = new LibroDigitale('uno', 'due', 'tre')
-console.log(newdigial) 
+// === Avvio ===
+// renderLibri();
+// console.log(Libro.daStringa('1984|Orwell|1949')); // verifica EXTRA 17
