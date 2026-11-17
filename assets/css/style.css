@@ -83,6 +83,38 @@ body {
   margin-top: 28px;
 }
 
+.lista-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.lista-header h2 {
+  margin: 0;
+}
+
+.btn-svuota {
+  background: none;
+  color: hsl(0, 65%, 45%);
+  border: 1px solid hsl(0, 65%, 45%);
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-svuota:hover {
+  background: hsl(0, 65%, 96%);
+}
+
+.info-storage {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #666;
+}
+
 .lista-libri {
   list-style: none;
   padding: 0;
