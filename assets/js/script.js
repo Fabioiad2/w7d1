@@ -198,6 +198,95 @@ document.getElementById('svuota-tutto').addEventListener('click', () => {
     renderLibri();
 });
 
-// === AVVIO ===
+class Posts {
+    constructor(_title, _body) {
+        this.titolo = _title;
+        this.body = _body;
+    }
+}
 
-renderLibri();
+const productsRow = document.querySelector('#productsRow');
+let product = [];
+
+// === AVVIO ===
+const url = 'https://jsonplaceholder.typicode.com';
+const posts = 'posts';
+async function loadData(url, endpoint) {
+    try {
+        const response = await fetch(url, endpoint);
+        product = await response.json();
+        renderProduct(product);
+
+    } catch (err) {
+        console.error(err);
+    }
+
+}
+loadData(`${url}/${posts}`);
+
+async function dettaglio(id) {
+    const endpoint = `posts/${id}`;
+    try {
+        const response = await fetch(`${url}/${endpoint}`);
+        const a = await response.json();
+        console.log(a);
+        renderDetail([a]);
+    } catch (err) {
+        console.error(err);
+    }
+}
+const detail = document.querySelector('#detail');
+
+function deletePosts(id) {
+    fetch(`${url}/posts/${id}`, {
+        method: 'DELETE',
+    });
+}
+
+function renderDetail(list) {
+    detail.textContent = '';
+    list.forEach((l) => {
+        const card = document.createElement('div');
+        card.classList.add('card', 'col-md-6', 'col-12', 'my-5');
+        const dettaglio = document.createElement('h3');
+        dettaglio.textContent = 'Dettaglio';
+        const h4 = document.createElement('h4');
+        const p = document.createElement('p');
+        const button = document.createElement('button');
+        button.textContent = 'dettaglio';
+
+        button.addEventListener('click', () => {
+            dettaglio(l.id);
+        });
+        p.textContent = l.body;
+        h4.textContent = l.title;
+        detail.appendChild(card);
+        card.append(dettaglio, h4, p, button);
+    });
+}
+
+function renderProduct(list) {
+    productsRow.textContent = '';
+    list.forEach((l) => {
+        const card = document.createElement('div');
+        card.classList.add('card', 'col-md-6', 'col-12');
+        const h4 = document.createElement('h4');
+        const p = document.createElement('p');
+        const button = document.createElement('button');
+        button.textContent = 'dettaglio';
+        button.addEventListener('click', () => {
+            dettaglio(l.id);
+        });
+        const elimina = document.createElement('button');
+        elimina.textContent = 'elimina';
+        elimina.addEventListener('click', () => {
+            deletePosts(l.id);
+            renderProduct(product);
+            console.log(product);
+        });
+        p.textContent = l.body;
+        h4.textContent = l.title;
+        productsRow.appendChild(card);
+        card.append(h4, p, button, elimina);
+    });
+}
